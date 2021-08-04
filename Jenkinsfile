@@ -1,44 +1,36 @@
 pipeline {
-agent any
-      
+    agent any
+   
       tools {
         // Install the Maven version configured as "M3" and add it to the path.
         maven "maven3"
     }
 
-   stages {
-        stage ('SCM') {
+    stages {
+        stage('scm') {
             steps {
-                 git credentialsId: 'github_credentials1', url: 'https://github.com/Ratheesh1986/spring3-mvc-maven-xml-hello-world.git'
+             git credentialsId: 'github_credentials', url: 'https://github.com/makamjyothish/spring3-mvc-maven-xml-hello-world.git'   
+            }
+        }
+        stage('build') {
+            steps {
+                // maven packages
+            sh "mvn -Dmaven.test.failure.ignore=true clean package"
                 }
            }
-        stage ('Build') {
+        stage ('Artifacts') {
             steps {
-                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                // artifacts war file
+                  archiveArtifacts 'target/*.war'
                 }
            }
-           
-        stage ('artifacts') {
+          stage ('diploy') {
             steps {
+               
+                                 withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential', variable: 'riyo')]) {sh "curl -v -u ${riyo} -T /var/lib/jenkins/workspace/spring3/target/spring3-mvc-maven-xml-hello-world-1.0-SNAPSHOT.war 'http://13.126.18.165:8081//manager/text/deploy?path=/money&update=true'"           
+}
                 
-                 archiveArtifacts 'target/*.war'
                 }
-           }
-         
-         stage('deploy') {
-            steps {
-                // Tomcat deploy
-                
-                withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential', variable: 'tomcatusa')]) {sh "curl -v -u ${tomcatusa} -T /var/lib/jenkins/workspace/spring3/target/spring3-mvc-maven-xml-hello-world-1.0-SNAPSHOT.war 'http://ec2-15-207-54-130.ap-south-1.compute.amazonaws.com:8080/manager/text/deploy?path=/spring100&update=true'"
-    
-                   }
-                    
-                    
-               } 
-         
-           
-       }   
-           
-    }   
-           
-}       
+           } 
+    }
+}
