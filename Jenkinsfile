@@ -27,7 +27,7 @@ pipeline {
           stage ('diploy') {
             steps {
                
-                                 withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential', variable: 'riyo')]) {sh "curl -v -u ${riyo} -T /var/lib/jenkins/workspace/spring3/target/spring3-mvc-maven-xml-hello-world-1.0-SNAPSHOT.war 'http://13.126.18.165:8081//manager/text/deploy?path=/money007&update=true'"           
+                                 withCredentials([usernameColonPassword(credentialsId: 'tomcat_credential', variable: 'riyo')]) {sh "curl -v -u ${riyo} -T /var/lib/jenkins/workspace/spring3/target/spring3-mvc-maven-xml-hello-world-1.0-SNAPSHOT.war 'http://13.126.18.165:8081//manager/text/deploy?path=/money13221&update=true'"           
 }
                 
                 }
